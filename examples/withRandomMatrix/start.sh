@@ -1,0 +1,1 @@
+hadoop jar MRNMF.jar MRNMF -s 0.3 -o output -t mrnmf -n 100 -m 20 -k 8 -it 5 -r 5

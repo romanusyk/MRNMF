@@ -179,7 +179,8 @@ public class ConvexNMF implements Algorithm {
                             workingDirectory + "/denominatorW.txt",
                             outputDirectory + "/W.txt"
                     },
-                    workingDirectory + "/W"
+                    workingDirectory + "/W",
+                    true
             ).run();
 
             wdfs.delete(new Path(od, "W.txt"), true);
@@ -198,7 +199,8 @@ public class ConvexNMF implements Algorithm {
                             workingDirectory + "/denominatorG.txt",
                             outputDirectory + "/G.txt"
                     },
-                    workingDirectory + "/G"
+                    workingDirectory + "/G",
+                    true
             ).run();
 
             wdfs.delete(new Path(od, "G.txt"), true);

@@ -49,6 +49,8 @@ public class MatrixUpdater {
         public void reduce(LongWritable key, Iterable<Text> values,
                            Context context) throws IOException, InterruptedException {
 
+            boolean sqrt = context.getConfiguration().getBoolean("sqrt", false);
+
             StringBuilder result = new StringBuilder();
 
             String[] arrayNames = new String[] {"m", "a", "b"};
@@ -66,7 +68,11 @@ public class MatrixUpdater {
             }
 
             for (int j = 0; j < k; j++) {
-                result.append(arrays.get("m")[j] * arrays.get("a")[j] / arrays.get("b")[j]);
+                double frac = arrays.get("a")[j] / arrays.get("b")[j];
+                if (sqrt) {
+                    frac = Math.sqrt(frac);
+                }
+                result.append(arrays.get("m")[j] * frac);
                 if (j != k - 1)
                     result.append(",");
             }
@@ -91,14 +97,25 @@ public class MatrixUpdater {
     private Configuration configuration;
     private String[] inputPaths;
     private String outputPath;
+    private boolean sqrt;
 
     public MatrixUpdater(Configuration configuration, String[] inputPaths, String outputPath) {
         this.configuration = configuration;
         this.inputPaths = inputPaths;
         this.outputPath = outputPath;
+        this.sqrt = false;
+    }
+
+    public MatrixUpdater(Configuration configuration, String[] inputPaths, String outputPath, boolean sqrt) {
+        this.configuration = configuration;
+        this.inputPaths = inputPaths;
+        this.outputPath = outputPath;
+        this.sqrt = sqrt;
     }
 
     public void run() throws IOException, ClassNotFoundException, InterruptedException {
+
+        configuration.setBoolean("sqrt", sqrt);
 
         Job job = Job.getInstance(configuration, "com.romanysik.MatrixUpdater");
 

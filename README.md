@@ -9,12 +9,12 @@ This code implements NMF algorithm from paper above.
 
 With input martix
 ```
-hadoop jar MRNMF.jar MRNMF -i input.txt -o output -t mrnmf -n 100 -m 20 -k 8 -it 3 -r 5
+hadoop jar MRNMF.jar MRNMF -i input.txt -o output -t mrnmf -n 100 -m 20 -k 8 -it 3 -r 5 -a NMF
 ```
 
 With random martix
 ```
-hadoop jar MRNMF.jar MRNMF -s 0.3 -o output -t mrnmf -n 100 -m 20 -k 8 -it 3 -r 5
+hadoop jar MRNMF.jar MRNMF -s 0.3 -o output -t mrnmf -n 100 -m 20 -k 8 -it 3 -r 5 -a NMF
 ```
 
 # **Options**
@@ -28,6 +28,7 @@ hadoop jar MRNMF.jar MRNMF -s 0.3 -o output -t mrnmf -n 100 -m 20 -k 8 -it 3 -r 
     -it          iterations number
     -k           the dimension number to be reduced to
     -r           the range value for the matrix elements
+    -a           the algorithm to be used
     
   ## Examples
   

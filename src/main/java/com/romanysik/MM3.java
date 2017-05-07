@@ -1,7 +1,7 @@
+package com.romanysik;
+
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -12,9 +12,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Created by romm on 03.04.17.
@@ -90,7 +88,7 @@ public class MM3 {
 
     public void run() throws IOException, ClassNotFoundException, InterruptedException {
         
-        Job job = Job.getInstance(configuration, "MM3");
+        Job job = Job.getInstance(configuration, "com.romanysik.MM3");
 
         job.setJarByClass(MRNMF.class);
 

@@ -1,3 +1,5 @@
+package com.romanysik;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
@@ -13,7 +15,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,7 +100,7 @@ public class MatrixUpdater {
 
     public void run() throws IOException, ClassNotFoundException, InterruptedException {
 
-        Job job = Job.getInstance(configuration, "MatrixUpdater");
+        Job job = Job.getInstance(configuration, "com.romanysik.MatrixUpdater");
 
         job.setJarByClass(MRNMF.class);
 

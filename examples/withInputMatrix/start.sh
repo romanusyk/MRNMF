@@ -1,1 +1,1 @@
-hadoop jar MRNMF.jar MRNMF -i input.txt -o output -t mrnmf -n 5 -m 4 -k 3 -it 5 -r 5
+hadoop jar MRNMF.jar com.romanysik.MRNMF -i input.txt -o output -t mrnmf -n 5 -m 4 -k 3 -it 5 -r 5 -a NMF

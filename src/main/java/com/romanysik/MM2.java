@@ -1,3 +1,5 @@
+package com.romanysik;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -47,7 +49,8 @@ public class MM2 {
             int k = context.getConfiguration().getInt("k", -1);
 
             String fpath = context.getConfiguration().get("mpath");
-            String wd = context.getConfiguration().get("od");
+            String datLoc = context.getConfiguration().get("datLoc", "od");
+            String wd = context.getConfiguration().get(datLoc);
             Path file = new Path(wd, fpath);
 
             FileSystem fs = file.getFileSystem(new Configuration());
@@ -118,7 +121,7 @@ public class MM2 {
 
             for (int i = 0; i < k; i++) {
                 res.append(result[i]);
-                if (i < k) {
+                if (i < k - 1) {
                     res.append(",");
                 }
             }
@@ -181,5 +184,12 @@ public class MM2 {
         job.setReducerClass(MM2Reducer2.class);
 
         job.waitForCompletion(true);
+
+        FileSystem tmpFS = tmpPath.getFileSystem(new Configuration());
+
+        if (tmpFS.exists(tmpPath)) {
+            tmpFS.delete(tmpPath, true);
+        }
+
     }
 }

@@ -1,94 +1,51 @@
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+package com.romanysik.algorithm;
+
+import com.romanysik.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
- * Created by romm on 30.03.17.
+ * Created by romm on 06.05.17.
  */
-public class MRNMF {
+public class NMF implements Algorithm {
 
-    private static CLIOption[] opts = new CLIOption[] {
-            new CLIOption("i", true, "path to the input matrix file; if not set random matrix with given sparsity -s will be generated", false),
-            new CLIOption("s", true, "sparsity of random generated matrix", false),
-            new CLIOption("o", true, "path to the output directory"),
-            new CLIOption("t", true, "path to the temporary directory"),
-            new CLIOption("n", true, "matrix row number"),
-            new CLIOption("m", true, "matrix column number"),
-            new CLIOption("it", true, "iterations number"),
-            new CLIOption("k", true, "the dimension number to be reduced to"),
-            new CLIOption("r", true, "the range value for the matrix elements"),
-            new CLIOption("h", false, "print help for this application", false)
-    };
+    private String inputFile;
 
-    public static void usage() {
-        System.out.print("Usage: hadoop jar MRNMF.jar nmf.MRNMF\n");
-        for (CLIOption o : opts) {
-            System.out.println(o);
-        }
-    }
+    private int n;
+    private int m;
+    private int k;
 
-    public static void main(String[] args) throws ParseException, IOException, InterruptedException, ClassNotFoundException {
+    private String workingDirectory;
+    private String outputDirectory;
 
-        // parsing CLI optons
-        Options options = new Options();
-        for (CLIOption o : opts) {
-            options.addOption(o.getName(), o.hasArg(), o.getDescription());
-        }
-        BasicParser parser = new BasicParser();
-        CommandLine commandLine = parser.parse(options, args);
+    private Path wd;
+    private Path od;
 
-        if (commandLine.hasOption('h')) {
-            usage();
-            return;
-        }
+    private FileSystem wdfs;
+    private FileSystem odfs;
 
-        for (CLIOption o : opts) {
-            if (o.isRequired() && !commandLine.hasOption(o.getName())) {
-                usage();
-                return;
-            }
-        }
+    public NMF(String inputFile, int n, int m, int k, int r,
+               String workingDirectory, String outputDirectory,
+               Path wd, Path od,
+               FileSystem wdfs, FileSystem odfs) throws IOException {
 
-        String inputFile = commandLine.getOptionValue("i");
-        double sparsity = Double.parseDouble(commandLine.getOptionValue("s", "0.5"));
-        String outputDirectory = commandLine.getOptionValue("o");
-        String workingDirectory = commandLine.getOptionValue("t");
-        int n = Integer.parseInt(commandLine.getOptionValue("n"));
-        int m = Integer.parseInt(commandLine.getOptionValue("m"));
-        int it = Integer.parseInt(commandLine.getOptionValue("it"));
-        int k = Integer.parseInt(commandLine.getOptionValue("k"));
-        int r = Integer.parseInt(commandLine.getOptionValue("r"));
+        this.inputFile = inputFile;
+        this.n = n;
+        this.m = m;
+        this.k = k;
+        this.workingDirectory = workingDirectory;
+        this.outputDirectory = outputDirectory;
+        this.wd = wd;
+        this.od = od;
+        this.wdfs = wdfs;
+        this.odfs = odfs;
 
-        // Creating output directory
-        Path od = new Path(outputDirectory);
-        FileSystem odfs = od.getFileSystem(new Configuration());
-        if (odfs.exists(od)) {
-            odfs.delete(od, true);
-        }
-        odfs.mkdirs(od);
-
-        // Creating working directory
-        Path wd = new Path(workingDirectory);
-        FileSystem wdfs = wd.getFileSystem(new Configuration());
-        odfs.mkdirs(new Path(od, "dist"));
-
-        // Buffered writer for matrix initialization
         BufferedFileWriter bufferedFileWriter = new BufferedFileWriter();
-
-        // Init input matrix randomly if not given
-        if (inputFile == null) {
-            bufferedFileWriter.open(wdfs, new Path("input.txt"));
-            MatrixInitializer.writeRandomSparseMatrix(n, m, r, sparsity, bufferedFileWriter);
-            bufferedFileWriter.close();
-            inputFile = "input.txt";
-        }
 
         // Init F matrix randomly
         bufferedFileWriter.open(odfs, new Path(od, "F.txt"));
@@ -103,12 +60,18 @@ public class MRNMF {
         MatrixByteConverter.txt2dat(od, "F.txt", "F.dat");
         MatrixByteConverter.txt2dat(od, "G.txt", "G.dat");
 
+    }
+
+
+    @Override
+    public void compute(int iterations) throws IOException, InterruptedException, ClassNotFoundException {
+
         Configuration configuration = new Configuration();
 
         configuration.set("wd", workingDirectory);
         configuration.set("od", outputDirectory);
 
-        for (int i = 0; i < it; i++) {
+        for (int i = 0; i < iterations; i++) {
 
             // Clear working directory
             if (wdfs.exists(wd)) {
@@ -208,21 +171,4 @@ public class MRNMF {
         FileUtil.copyMerge(odfs, new Path(od, "dist"), odfs, new Path(od, "dist.csv"), false, new Configuration(), "");
 
     }
-
-    public static void printArray(Object[] array) {
-        for (int i = 0; i < array.length; i++) {
-            System.out.print(array[i] + "\t");
-        }
-        System.out.println();
-    }
-
-    public static void printMatrix(Object[][] array) {
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[0].length; j++) {
-                System.out.print(array[i][j] + "\t");
-            }
-            System.out.println();
-        }
-    }
-
 }

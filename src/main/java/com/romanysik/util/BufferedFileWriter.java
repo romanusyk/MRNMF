@@ -1,4 +1,4 @@
-package com.romanysik;
+package com.romanysik.util;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;

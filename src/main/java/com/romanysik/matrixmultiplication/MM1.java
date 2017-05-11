@@ -1,5 +1,6 @@
-package com.romanysik;
+package com.romanysik.matrixmultiplication;
 
+import com.romanysik.MRNMF;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -126,7 +127,7 @@ public class MM1 {
 
     public void run() throws IOException, ClassNotFoundException, InterruptedException {
         
-        Job job = Job.getInstance(configuration, "com.romanysik.MM1");
+        Job job = Job.getInstance(configuration, "com.romanysik.matrixmultiplication.MM1");
 
         job.setJarByClass(MRNMF.class);
 

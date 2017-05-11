@@ -1,5 +1,6 @@
-package com.romanysik;
+package com.romanysik.util;
 
+import com.romanysik.MRNMF;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -79,7 +80,7 @@ public class Transposer {
 
     public void run() throws IOException, ClassNotFoundException, InterruptedException {
 
-        Job job = Job.getInstance(configuration, "com.romanysik.Transposer");
+        Job job = Job.getInstance(configuration, "com.romanysik.util.Transposer");
 
         job.setJarByClass(MRNMF.class);
 

@@ -1,6 +1,10 @@
-package com.romanysik;
+package com.romanysik.util;
 
+import com.romanysik.MRNMF;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -12,7 +16,9 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Created by romm on 04.04.17.
@@ -88,6 +94,7 @@ public class DistanceFinder {
 
             double result = Math.sqrt(sum);
             System.out.println("\n\n\n\n\n" + result + "\n\n\n\n\n");
+            context.getConfiguration().setDouble("distance", result);
             context.write(new LongWritable(1), new Text(result + ""));
 
         }
@@ -97,16 +104,27 @@ public class DistanceFinder {
     private Configuration configuration;
     private String Xpath;
     private String FGPath;
-    private String outputPath;
+    private String outputDir;
+    private String resultFileName;
 
-    public DistanceFinder(Configuration configuration, String XPath, String FGPath, String outputPath) {
+    public DistanceFinder(Configuration configuration, String XPath, String FGPath, String outputDir, String resultFileName) {
         this.configuration = configuration;
         this.Xpath = XPath;
         this.FGPath = FGPath;
-        this.outputPath = outputPath;
+        this.outputDir = outputDir;
+        this.resultFileName = resultFileName;
     }
 
-    public void run() throws IOException, ClassNotFoundException, InterruptedException {
+    private Double getResult(FileSystem fileSystem, Path file) throws IOException {
+        FSDataInputStream input = fileSystem.open(file);
+        String line = new BufferedReader(new InputStreamReader(input)).readLine();
+        return Double.parseDouble(line.split("\t")[1]);
+    }
+
+    public Double run() throws IOException, ClassNotFoundException, InterruptedException {
+
+        String wd = configuration.get("wd");
+        Path wdPath = new Path(wd);
 
         Job job = Job.getInstance(configuration, "DF1");
 
@@ -134,7 +152,7 @@ public class DistanceFinder {
         job.setJarByClass(MRNMF.class);
 
         MatrixUpdater.addInpuPath(job, tmpPath);
-        FileOutputFormat.setOutputPath(job, new Path(outputPath));
+        FileOutputFormat.setOutputPath(job, new Path(wdPath, outputDir));
 
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
@@ -146,6 +164,12 @@ public class DistanceFinder {
         job.setReducerClass(DFReducer2.class);
 
         job.waitForCompletion(true);
+
+        FileSystem wdfs = wdPath.getFileSystem(new Configuration());
+        FileUtil.copyMerge(wdfs, new Path(wd, outputDir), wdfs, new Path(wd, resultFileName), false, new Configuration(), "");
+
+        Double result = getResult(wdfs, new Path(wd, resultFileName));
+        return result;
     }
 
 }

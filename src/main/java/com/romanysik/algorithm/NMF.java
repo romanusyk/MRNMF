@@ -1,12 +1,14 @@
 package com.romanysik.algorithm;
 
-import com.romanysik.*;
+import com.romanysik.matrixmultiplication.MM1;
+import com.romanysik.matrixmultiplication.MM2;
+import com.romanysik.matrixmultiplication.MM3;
+import com.romanysik.util.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -70,6 +72,8 @@ public class NMF implements Algorithm {
 
         configuration.set("wd", workingDirectory);
         configuration.set("od", outputDirectory);
+
+        ResultHolder resultHolder = new ResultHolder(odfs, new Path(od, "report.txt"));
 
         for (int i = 0; i < iterations; i++) {
 
@@ -162,13 +166,11 @@ public class NMF implements Algorithm {
             new MM1(configuration, outputDirectory + "/F.txt", workingDirectory + "/X").run();
 
             configuration.setInt("mw", m);
-            new DistanceFinder(configuration, inputFile, workingDirectory + "/X", workingDirectory + "/dist").run();
+            Double result = new DistanceFinder(configuration, inputFile, workingDirectory + "/X", "dist", "tmp.txt").run();
 
-            FileUtil.copyMerge(wdfs, new Path(wd, "dist"), odfs, new Path(od, "dist/" + i + ".txt"), false, new Configuration(), "");
+            resultHolder.appendResult(result);
 
         }
-
-        FileUtil.copyMerge(odfs, new Path(od, "dist"), odfs, new Path(od, "dist.csv"), false, new Configuration(), "");
 
     }
 }

@@ -1,5 +1,6 @@
-package com.romanysik;
+package com.romanysik.matrixmultiplication;
 
+import com.romanysik.MRNMF;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -88,7 +89,7 @@ public class MM3 {
 
     public void run() throws IOException, ClassNotFoundException, InterruptedException {
         
-        Job job = Job.getInstance(configuration, "com.romanysik.MM3");
+        Job job = Job.getInstance(configuration, "com.romanysik.matrixmultiplication.MM3");
 
         job.setJarByClass(MRNMF.class);
 

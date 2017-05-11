@@ -3,6 +3,8 @@ package com.romanysik;
 import com.romanysik.algorithm.Algorithm;
 import com.romanysik.algorithm.ConvexNMF;
 import com.romanysik.algorithm.NMF;
+import com.romanysik.util.BufferedFileWriter;
+import com.romanysik.util.MatrixInitializer;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;

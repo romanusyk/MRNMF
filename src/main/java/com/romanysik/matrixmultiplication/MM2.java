@@ -1,5 +1,6 @@
-package com.romanysik;
+package com.romanysik.matrixmultiplication;
 
+import com.romanysik.MRNMF;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;

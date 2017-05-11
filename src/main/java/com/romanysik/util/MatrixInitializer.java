@@ -1,4 +1,6 @@
-package com.romanysik;
+package com.romanysik.util;
+
+import com.romanysik.util.BufferedFileWriter;
 
 import java.io.IOException;
 import java.util.Locale;

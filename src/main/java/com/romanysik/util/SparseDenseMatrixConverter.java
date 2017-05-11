@@ -1,4 +1,4 @@
-package com.romanysik;
+package com.romanysik.util;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -11,14 +11,9 @@ import java.io.*;
 /**
  * Created by romm on 07.05.17.
  */
-public class MatrixPrefixAppender {
+public class SparseDenseMatrixConverter {
 
-    public static void appendPrefix(Path dir, String prefix, String inputFile) throws IOException {
-        appendPrefix(dir, prefix, inputFile, prefix + "_" + inputFile);
-    }
-
-    public static void appendPrefix(Path dir, String prefix, String inputFile, String outputFile)
-            throws IOException {
+    public static void dense2sparse(Path dir, String inputFile, String outputFile) throws IOException {
 
         FileSystem fileSystem = dir.getFileSystem(new Configuration());
 
@@ -35,11 +30,19 @@ public class MatrixPrefixAppender {
 
         try {
             String line;
-            while ((line = reader.readLine()) != null){
+            line = reader.readLine();
+            while (line != null){
 
                 String[] keyVal = line.split("\\t");
-                writer.write(keyVal[0] + "\t" + prefix + keyVal[1] + "\n");
+                String i = keyVal[0];
 
+                int j = 1;
+                for (String aij : keyVal[1].split(",")) {
+                    writer.write(i + "\t" + j + "\t" + aij + "\n");
+                    j++;
+                }
+
+                line = reader.readLine();
             }
 
         } finally {

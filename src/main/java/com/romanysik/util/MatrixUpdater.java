@@ -1,5 +1,6 @@
-package com.romanysik;
+package com.romanysik.util;
 
+import com.romanysik.MRNMF;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
@@ -117,7 +118,7 @@ public class MatrixUpdater {
 
         configuration.setBoolean("sqrt", sqrt);
 
-        Job job = Job.getInstance(configuration, "com.romanysik.MatrixUpdater");
+        Job job = Job.getInstance(configuration, "com.romanysik.util.MatrixUpdater");
 
         job.setJarByClass(MRNMF.class);
 

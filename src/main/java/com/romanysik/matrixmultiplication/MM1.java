@@ -21,6 +21,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
+ *
+ * 1-job matrix multiplication
+ * share second matrix between all mappers, so it shouldn't be too large
+ *
+ * See MM-1 in http://cake.fiu.edu/Publications/Sun+al-10-LM.Large-Scale.Matrix.Factorization.using.MapReduce.ICDMW2010.published.paper.pdf
+ * for details
+ *
  * Created by romm on 03.04.17.
  */
 public class MM1 {
@@ -119,6 +126,18 @@ public class MM1 {
     private String inputPath;
     private String outputPath;
 
+    /**
+     *
+     * @param configuration with required params :
+     *                      {
+     *                          mpath: path to second matrix, which will be shared in memory,
+     *                          mw: second matrix column number,
+     *                          mh: second matrix row number,
+     *                          prefix: for each line of result
+     *                      }
+     * @param inputPath - path to first matrix, which should be dense
+     * @param outputPath
+     */
     public MM1(Configuration configuration, String inputPath, String outputPath) {
         this.configuration = configuration;
         this.inputPath = inputPath;

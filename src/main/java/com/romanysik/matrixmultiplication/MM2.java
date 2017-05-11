@@ -18,6 +18,13 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import java.io.IOException;
 
 /**
+ *
+ * 2-job matrix multiplication
+ * The most general method. Has no constraints on input matrices
+ *
+ * See MM-2 in http://cake.fiu.edu/Publications/Sun+al-10-LM.Large-Scale.Matrix.Factorization.using.MapReduce.ICDMW2010.published.paper.pdf
+ * for details
+ *
  * Created by romm on 03.04.17.
  */
 public class MM2 {
@@ -135,6 +142,19 @@ public class MM2 {
     private String inputPath;
     private String outputPath;
 
+    /**
+     *
+     * @param configuration with required params :
+     *                      {
+     *                          transposeX: shuold first matrix be transposed
+     *                          k: column number of second matrix
+     *                          mpath: path to second matrix, which will be shared in memory,
+     *                          datLoc: where to search for second matrix. Should be "od" or "wd"
+     *                          prefix: for each line of result
+     *                      }
+     * @param inputPath - path to first matrix, which should be sparse
+     * @param outputPath
+     */
     public MM2(Configuration configuration, String inputPath, String outputPath) {
         this.configuration = configuration;
         this.inputPath = inputPath;

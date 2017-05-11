@@ -12,6 +12,15 @@ import org.apache.hadoop.fs.Path;
 import java.io.IOException;
 
 /**
+ *
+ * Non-Negative matrix factorization algorithm implementation
+ * of given matrix X with shape (n, m)
+ *
+ * NMF fits two matrices F of shape (n, k) and G of shape (m, k)
+ *
+ * X can be reconstructed as
+ * X = F.dot(G.T)
+ *
  * Created by romm on 06.05.17.
  */
 public class NMF implements Algorithm {
@@ -31,6 +40,24 @@ public class NMF implements Algorithm {
     private FileSystem wdfs;
     private FileSystem odfs;
 
+    /**
+     *
+     * See Options https://github.com/Romm17/MRNMF#options
+     * for details
+     *
+     * @param inputFile - X
+     * @param n
+     * @param m
+     * @param k
+     * @param r - range
+     * @param workingDirectory - directory to store temporary data
+     * @param outputDirectory - directory to put results
+     * @param wd - Path to workingDirectory
+     * @param od - Path to outputDirectory
+     * @param wdfs - FileSystem of workingDirectory
+     * @param odfs - FileSystem of outputDirectory
+     * @throws IOException
+     */
     public NMF(String inputFile, int n, int m, int k, int r,
                String workingDirectory, String outputDirectory,
                Path wd, Path od,

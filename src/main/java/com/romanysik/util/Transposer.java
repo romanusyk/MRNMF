@@ -16,6 +16,8 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import java.io.IOException;
 
 /**
+ * Transpose dense matrix using MR job
+ *
  * Created by romm on 03.04.17.
  */
 public class Transposer {
@@ -72,6 +74,15 @@ public class Transposer {
     private String inputPath;
     private String outputPath;
 
+    /**
+     *
+     * @param configuration requires
+     *                      {
+     *                         mh: number of rows in input matrix
+     *                      }
+     * @param inputPath
+     * @param outputPath
+     */
     public Transposer(Configuration configuration, String inputPath, String outputPath) {
         this.configuration = configuration;
         this.inputPath = inputPath;

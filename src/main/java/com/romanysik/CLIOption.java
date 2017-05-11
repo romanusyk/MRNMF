@@ -1,6 +1,12 @@
 package com.romanysik;
 
 /**
+ * POJO for CLI option
+ *
+ * name         - name of param
+ * hasArg       - if param has argument
+ * description  - description of param
+ *
  * Created by romm on 03.04.17.
  */
 public class CLIOption {

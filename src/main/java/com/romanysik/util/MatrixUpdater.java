@@ -20,6 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Update matrix F by given N (numerator) and D (denominator)
+ *
+ * F = F * (N / D)
+ *
+ * or
+ *
+ * F = F * sqrt(N / D)
+ *
  * Created by romm on 04.04.17.
  */
 public class MatrixUpdater {
@@ -100,6 +108,21 @@ public class MatrixUpdater {
     private String outputPath;
     private boolean sqrt;
 
+    /**
+     * Updates F = F * (N / D)
+     *
+     * @param configuration with param
+     *                      {
+     *                          mw: number of columns
+     *                      }
+     * @param inputPaths should consist of three paths:
+     *                   [
+     *                      N matrix - with prefix "a:"
+     *                      D matrix - with prefix "b:"
+     *                      F matrix - without prefix
+     *                   ]
+     * @param outputPath
+     */
     public MatrixUpdater(Configuration configuration, String[] inputPaths, String outputPath) {
         this.configuration = configuration;
         this.inputPaths = inputPaths;
@@ -107,6 +130,15 @@ public class MatrixUpdater {
         this.sqrt = false;
     }
 
+    /**
+     * Updates F = F * sqrt(N / D) if sqrt is set to true
+     *
+     * See method above for details
+     * @param configuration
+     * @param inputPaths
+     * @param outputPath
+     * @param sqrt
+     */
     public MatrixUpdater(Configuration configuration, String[] inputPaths, String outputPath, boolean sqrt) {
         this.configuration = configuration;
         this.inputPaths = inputPaths;

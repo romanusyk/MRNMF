@@ -9,6 +9,7 @@ import org.apache.hadoop.fs.Path;
 import java.io.*;
 
 /**
+ * Converts dense matrix to sparse matrix and vice versa
  * Created by romm on 07.05.17.
  */
 public class SparseDenseMatrixConverter {
@@ -52,6 +53,10 @@ public class SparseDenseMatrixConverter {
             writer.flush();
             writer.close();
         }
+    }
+
+    public static void sparse2dense(Path dir, String inputFile, String outputFile) throws IOException {
+        // TODO
     }
 
 }

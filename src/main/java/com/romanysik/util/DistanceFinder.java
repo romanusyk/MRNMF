@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
+ *
+ * Calculates Frobenius Norm : F(X, X') = sqrt(sum((X - X') ^ 2))
+ * for given matrices using 2 MR jobs
+ *
  * Created by romm on 04.04.17.
  */
 public class DistanceFinder {
@@ -93,8 +97,6 @@ public class DistanceFinder {
             }
 
             double result = Math.sqrt(sum);
-            System.out.println("\n\n\n\n\n" + result + "\n\n\n\n\n");
-            context.getConfiguration().setDouble("distance", result);
             context.write(new LongWritable(1), new Text(result + ""));
 
         }
@@ -107,10 +109,21 @@ public class DistanceFinder {
     private String outputDir;
     private String resultFileName;
 
-    public DistanceFinder(Configuration configuration, String XPath, String FGPath, String outputDir, String resultFileName) {
+    /**
+     *
+     * @param configuration with required params
+     *                      {
+     *                          mw: matrix column number
+     *                      }
+     * @param XPath - should be sparse
+     * @param X1Path - should be dense
+     * @param outputDir - where to file with result
+     * @param resultFileName - name of file with result
+     */
+    public DistanceFinder(Configuration configuration, String XPath, String X1Path, String outputDir, String resultFileName) {
         this.configuration = configuration;
         this.Xpath = XPath;
-        this.FGPath = FGPath;
+        this.FGPath = X1Path;
         this.outputDir = outputDir;
         this.resultFileName = resultFileName;
     }
@@ -121,6 +134,13 @@ public class DistanceFinder {
         return Double.parseDouble(line.split("\t")[1]);
     }
 
+    /**
+     *
+     * @return result - Frobenius Norm
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InterruptedException
+     */
     public Double run() throws IOException, ClassNotFoundException, InterruptedException {
 
         String wd = configuration.get("wd");
@@ -168,8 +188,7 @@ public class DistanceFinder {
         FileSystem wdfs = wdPath.getFileSystem(new Configuration());
         FileUtil.copyMerge(wdfs, new Path(wd, outputDir), wdfs, new Path(wd, resultFileName), false, new Configuration(), "");
 
-        Double result = getResult(wdfs, new Path(wd, resultFileName));
-        return result;
+        return getResult(wdfs, new Path(wd, resultFileName));
     }
 
 }

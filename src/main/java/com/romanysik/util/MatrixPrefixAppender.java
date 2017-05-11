@@ -9,6 +9,16 @@ import org.apache.hadoop.fs.Path;
 import java.io.*;
 
 /**
+ * Util to append prfix to each row of matrix that means to make
+ * from
+ * 1    1,2,3
+ * 2    4,5,6
+ * ...
+ * ->
+ * 1    'prefix':1,2,3
+ * 2    'prefix':4,5,6
+ * ...
+ *
  * Created by romm on 07.05.17.
  */
 public class MatrixPrefixAppender {

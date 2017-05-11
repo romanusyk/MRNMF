@@ -16,6 +16,14 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import java.io.IOException;
 
 /**
+ *
+ * 1-job matrix multiplication
+ * works like MM-2, but computes C = A.T.dot(A)
+ * Strongly recommended to use when m << n, where (n, m)  shape of A
+ *
+ * See MM-3 in http://cake.fiu.edu/Publications/Sun+al-10-LM.Large-Scale.Matrix.Factorization.using.MapReduce.ICDMW2010.published.paper.pdf
+ * for details
+ *
  * Created by romm on 03.04.17.
  */
 public class MM3 {
@@ -81,6 +89,15 @@ public class MM3 {
     private String inputPath;
     private String outputPath;
 
+    /**
+     *
+     * @param configuration with required params :
+     *                      {
+     *                          k: input matrix column number
+     *                      }
+     * @param inputPath - path input matrix, which should be dense
+     * @param outputPath
+     */
     public MM3(Configuration configuration, String inputPath, String outputPath) {
         this.configuration = configuration;
         this.inputPath = inputPath;

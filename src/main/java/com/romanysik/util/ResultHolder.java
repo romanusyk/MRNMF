@@ -11,6 +11,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Holds learning results
+ *
+ * De-facto stores two arrays:
+ *      time - cumulative time of each iteration
+ *      result - score of each iteration
+ *
  * Created by romm on 11.05.17.
  */
 public class ResultHolder {
@@ -23,6 +29,12 @@ public class ResultHolder {
     private FileSystem fs;
     private Path file;
 
+    /**
+     * Initialize arrays and makes first tick
+     *
+     * @param fs - FileSystem
+     * @param file - and Path to put report.txt
+     */
     public ResultHolder(FileSystem fs, Path file) {
 
         this.fs = fs;
@@ -35,10 +47,21 @@ public class ResultHolder {
 
     }
 
+    /**
+     * Save time when learning began
+     * This method is called by constructor, by can be called directly if need
+     */
     public void tick() {
         timestamp = System.currentTimeMillis();
     }
 
+    /**
+     * Saves result to report.txt according to the format
+     *
+     * <iteration>,<time>,<score>
+     *
+     * @throws IOException
+     */
     public void save() throws IOException {
         if (fs.exists(file)) {
             fs.delete(file, false);
@@ -58,6 +81,12 @@ public class ResultHolder {
 
     }
 
+    /**
+     * Appends score, time and saves current result to report.txt
+     *
+     * @param newResult
+     * @throws IOException
+     */
     public void appendResult(Double newResult) throws IOException {
         long newTime = System.currentTimeMillis() - timestamp;
         time.add(newTime);

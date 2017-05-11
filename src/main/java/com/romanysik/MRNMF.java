@@ -17,10 +17,17 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
+ * Main class
+ *
+ * Parses CLI options and runs chosen factorization algorithm on given input
+ *
  * Created by romm on 30.03.17.
  */
 public class MRNMF {
 
+    /**
+     * All possible CLI options
+     */
     private static CLIOption[] opts = new CLIOption[] {
             new CLIOption("i", true, "path to the input matrix file; if not set random matrix with given sparsity -s will be generated", false),
             new CLIOption("s", true, "sparsity of random generated matrix", false),
@@ -35,6 +42,9 @@ public class MRNMF {
             new CLIOption("h", false, "print help for this application", false)
     };
 
+    /**
+     * Show usage of program
+     */
     public static void usage() {
         System.out.print("Usage: hadoop jar MRNMF.jar nmf.com.romanysik.MRNMF\n");
         for (CLIOption o : opts) {
@@ -42,6 +52,15 @@ public class MRNMF {
         }
     }
 
+    /**
+     * Entry point
+     *
+     * @param args
+     * @throws ParseException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public static void main(String[] args) throws ParseException, IOException, InterruptedException, ClassNotFoundException {
 
         // parsing CLI optons
@@ -99,6 +118,7 @@ public class MRNMF {
             inputFile = "input.txt";
         }
 
+        // Choosing algorithm
         if (Objects.equals(algorithmName, "NMF")) {
 
             Algorithm algorithm = new NMF(
@@ -119,24 +139,11 @@ public class MRNMF {
 
             algorithm.compute(it);
 
+        } else {
+            System.out.println("Choose correct algorithm!");
+            usage();
         }
 
-    }
-
-    public static void printArray(Object[] array) {
-        for (int i = 0; i < array.length; i++) {
-            System.out.print(array[i] + "\t");
-        }
-        System.out.println();
-    }
-
-    public static void printMatrix(Object[][] array) {
-        for (int i = 0; i < array.length; i++) {
-            for (int j = 0; j < array[0].length; j++) {
-                System.out.print(array[i][j] + "\t");
-            }
-            System.out.println();
-        }
     }
 
 }

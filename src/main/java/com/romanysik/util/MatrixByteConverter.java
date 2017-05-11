@@ -9,6 +9,9 @@ import org.apache.hadoop.fs.Path;
 import java.io.*;
 
 /**
+ *
+ * Converts dense matrix .txt to .dat matrix and vice versa
+ *
  * Created by romm on 03.04.17.
  */
 public class MatrixByteConverter {
